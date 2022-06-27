@@ -1,0 +1,54 @@
+<html>
+<style>
+  body
+    {
+     background:none transparent;
+    }
+table, th, td {
+  border:1px solid black;
+  background-color:hsla(30, 100%, 50%, 0.3);
+}
+th {
+    cursor: pointer;
+}
+tr:hover {background-color: #adadad;}
+</style>
+<body>
+<?php
+global $Row;
+$Row .= "<table style=\"width:100%\";><tr><th>Name</th><th>Race</th><th>Level</th><th>LevelProgress</th><th>HP</th><th>Location</th></tr><tr>";
+foreach(glob('./*.json') as $file) {
+   $people_json = file_get_contents($file);
+   $decoded_json = json_decode($people_json, true);
+   $NoExtension = basename($file, '.json');
+   $Name = $NoExtension;
+   $R = $decoded_json[$NoExtension]['race'];
+   $CL = $decoded_json[$NoExtension]['level'];
+   $L = $decoded_json[$NoExtension]['levelProgress'];
+   $HP = round($decoded_json[$NoExtension]['healthBase']) . "/" . round($decoded_json[$NoExtension]['healthCurrent']);
+   $Loc = $decoded_json[$NoExtension]['cell'];
+
+   $Row .= "<td>" . $Name . "</td>" . "<td>" . $R . "</td>" . "<td>" . $CL . "</td>" . "<td>" . $L . "</td>" . "<td>" . $HP . "</td>" . "<td>" . $Loc . "</td></tr>";
+}
+$List = $Row . "</tr>";
+echo $List;
+?>
+
+<!-- Sortable Table Header Script-->
+<script>
+const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+
+const comparer = (idx, asc) => (a, b) => ((v1, v2) => 
+    v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+    )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+
+// do the work...
+document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => {
+    const table = th.closest('table');
+    Array.from(table.querySelectorAll('tr:nth-child(n+2)'))
+        .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
+        .forEach(tr => table.appendChild(tr) );
+})));
+</script>
+</body>
+</html>

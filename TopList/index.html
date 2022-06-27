@@ -1,0 +1,17 @@
+<html>
+<!-- use this code on your main webpage. Replace YourTopUrl to the location of the data\TopList url -->
+<body>
+<iframe id="iframe" src="YourTopUrl" style="border:none;" allowtranparency="true" scrolling="no" title="Top" width="700" height="410"></iframe></div> 
+
+<script>
+  window.setInterval(function() {
+        reloadIFrame()
+ }, 60000);
+
+ function reloadIFrame() {
+          console.log('reloading..');
+         document.getElementById('iframe').contentWindow.location.reload();
+ }
+</script>
+</body>
+</html>

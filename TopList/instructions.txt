@@ -1,0 +1,3 @@
+1. (TopList.lua) goes into scripts\custom
+2. (Data/TopList) the (TopList) Folder goes directly into the server\data folder
+3. (index.html) in main folder can be used to embed into your website
