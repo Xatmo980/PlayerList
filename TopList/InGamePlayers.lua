@@ -1,6 +1,6 @@
 local data = {}
 local ViewPlayerGuiId = 44332205
-local Rank = 2
+local Rank = 2 -- Change Rank to the rank you want to allow access to this command
 local getFiles = function(directory)
 
     local i, t, popen = 0, {}, io.popen
