@@ -1,5 +1,4 @@
 local Top = {}
-local Progress = 0
 
 customEventHooks.registerHandler("OnPlayerLevel", function(eventStatus, pid)
     Top = {}
