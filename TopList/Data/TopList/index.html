@@ -17,6 +17,8 @@ tr:hover {background-color: #adadad;}
 
 <script>
 function sortTable() {
+  var PlayerLimit = 15; // Set your Play List Max show number
+  var rowCount = SortIt.rows.length;
   var table, rows, switching, i, x, y, shouldSwitch;
   table = document.getElementById("SortIt");
   switching = true;
@@ -36,14 +38,20 @@ function sortTable() {
       rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
       switching = true;
     }
-  }
+}
+for (var x=rowCount-1; x>PlayerLimit; x--) {
+   SortIt.deleteRow(x);
+}
+
 }
 </script>
 
 <?php
 global $Row;
+
 $Row .= "<table id=\"SortIt\" style=\"width:100%\";><tr><th>Name</th><th>Race</th><th>Level</th><th>LevelProgress</th><th>HP</th><th>Location</th></tr><tr>";
 foreach(glob('./*.json') as $file) {
+
    $people_json = file_get_contents($file);
    $decoded_json = json_decode($people_json, true);
    $NoExtension = basename($file, '.json');
@@ -58,8 +66,23 @@ foreach(glob('./*.json') as $file) {
 }
 $List = $Row . "</tr>";
 echo $List;
-echo "<script> sortTable(); </script>";
+echo "<script> sortTable();</script>";
 ?>
+
+<script>
+const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+
+const comparer = (idx, asc) => (a, b) => ((v1, v2) => 
+    v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+    )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+
+document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => {
+    const table = th.closest('table');
+    Array.from(table.querySelectorAll('tr:nth-child(n+2)'))
+        .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
+        .forEach(tr => table.appendChild(tr) );
+})));
+</script>
 
 </body>
 </html>
