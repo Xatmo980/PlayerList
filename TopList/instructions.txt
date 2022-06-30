@@ -1,3 +1,8 @@
 1. (TopList.lua) goes into scripts\custom
-2. (Data/TopList) the (TopList) Folder goes directly into the server\data folder
-3. (index.html) in main folder can be used to embed into your website
+2. (InGamePlayers.lua) goes into scripts\custom
+3. (Data/TopList) the (TopList) Folder goes directly into the server\data folder
+4. (index.html) in main folder you can use the code to embed it into your website
+
+   Add Inside your scripts\customScripts.lua
+   require("custom/TopList")
+   require("custom/InGamePlayers")
