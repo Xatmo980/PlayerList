@@ -1,6 +1,7 @@
 local data = {}
 local ViewPlayerGuiId = 44332205
-local Rank = 2 -- Change Rank to the rank you want to allow access to this command
+local PlayerLimit = 15 -- set to how many players to allowed to be displayed
+local Rank = 2 -- Rank allowed to use the /playerlist command
 local getFiles = function(directory)
 
     local i, t, popen = 0, {}, io.popen
@@ -21,6 +22,9 @@ local getPlayerFilesData = function(directory)
       local directory = tes3mp.GetDataPath() .. "/TopList/"
       local Files = getFiles(directory)
       local Playerlist = ""
+      local list = ""
+      local sort = {}
+      local R = 0
       data = {}
 
       for _,fileName in pairs(Files) do
@@ -32,16 +36,24 @@ local getPlayerFilesData = function(directory)
          -- tes3mp.LogMessage(3, "Gandalf: You Shall Not Pass!!!")
       else
          data = jsonInterface.load("TopList/" .. fileName .. ".json")
-         LvL = (data[fileName].level)
-         Progress = (data[fileName].levelProgress)
          cHP = math.floor(data[fileName].healthCurrent)
          bHP = math.floor(data[fileName].healthBase)
-         Race = (data[fileName].race)
-         Cell = (data[fileName].cell)
-         Playerlist = Playerlist .. "[" .. fileName .. "]" .. " Level " .. LvL .. " Progress " .. Progress .. " HP " .. cHP .. "/" .. bHP .. "\n"
+         for k,v in pairs(data) do
+             table.insert(sort, {Name = k, level = v.level, Progress = v.levelProgress, HP = cHP .. "/" .. bHP})
+         end
    end
  end
- return Playerlist
+for k, v in pairs(sort) do
+           table.sort(sort, function(a,b) return a.level>b.level end)
+end
+   for i=1,#sort do
+       if R >= PlayerLimit then
+          break
+       end
+       list = list .. "[" .. sort[i].Name .. "]" .. "\n" .. "     Level " .. sort[i].level .. " Progress " .. sort[i].Progress .. " HP " .. sort[i].HP.."\n"
+       R = R + 1
+   end
+ return list
 end
 
 local viewPlayerMenu = function(pid)
@@ -53,7 +65,6 @@ local viewPlayerMenu = function(pid)
         end
 end
 
--- GUI Handler
 customEventHooks.registerHandler("OnGUIAction", function(eventStatus, pid, idGui, data)
       local isValid = eventStatus.validDefaultHandler
 	    if isValid ~= false then
