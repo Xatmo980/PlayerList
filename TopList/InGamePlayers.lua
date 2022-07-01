@@ -36,10 +36,11 @@ local getPlayerFilesData = function(directory)
          -- tes3mp.LogMessage(3, "Gandalf: You Shall Not Pass!!!")
       else
          data = jsonInterface.load("TopList/" .. fileName .. ".json")
-         cHP = math.floor(data[fileName].healthCurrent)
-         bHP = math.floor(data[fileName].healthBase)
+         local cHP = math.floor(data[fileName].healthCurrent)
+         local bHP = math.floor(data[fileName].healthBase)
+         local Cell = data[fileName].cell
          for k,v in pairs(data) do
-             table.insert(sort, {Name = k, level = v.level, Progress = v.levelProgress, HP = cHP .. "/" .. bHP})
+             table.insert(sort, {Name = k, level = v.level, Progress = v.levelProgress, HP = cHP .. "/" .. bHP, Location = Cell})
          end
    end
  end
@@ -50,7 +51,7 @@ end
        if R >= PlayerLimit then
           break
        end
-       list = list .. "[" .. sort[i].Name .. "]" .. "\n" .. "     Level " .. sort[i].level .. " Progress " .. sort[i].Progress .. " HP " .. sort[i].HP.."\n"
+       list = list .. "[" .. sort[i].Name .. "] - (" .. sort[i].Location .. ")" .. "\n" .. "     Level " .. sort[i].level .. " Progress " .. sort[i].Progress .. " HP " .. sort[i].HP.."\n"
        R = R + 1
    end
  return list
